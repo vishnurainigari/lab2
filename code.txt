@@ -1,0 +1,63 @@
+//HTML
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+<p>Google Map----Direction Service</p><body>
+    <div id="control">
+        <input type="text" placeholder="Enter Start Point" name="start" id="start" value=""/>
+        <input type="text" placeholder="Enter End Point" name="end" id="end" value=""/>
+     
+        <select id="mode">
+      <option value="DRIVING">Driving</option>
+          </select>
+     <input type="submit" id="submit" value="submit"/>
+        
+    </div>
+    <div id="map-canvas" style="width:500px;height:500px"></div>
+
+//javascript
+
+$('#control').ready(function() {
+    initialize(36.588056, -116.943056);
+    $('#submit').click(function(){      
+                calcRoute();      
+          });
+});
+var directionsDisplay;
+var directionsService = new google.maps.DirectionsService();
+var map;
+function initialize(latitude,longitude) {
+  directionsDisplay = new google.maps.DirectionsRenderer();
+  var mapOptions = {
+    zoom: 7,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    center:new google.maps.LatLng(latitude,longitude)
+  }
+  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+  directionsDisplay.setMap(map);
+     var control = document.getElementById('control');
+  control.style.display = 'block';
+  map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
+}
+
+function calcRoute() {
+  var DRIVING = document.getElementById('mode').value;
+  var a = document.getElementById('start').value;
+var b = document.getElementById('end').value;
+    var request = {
+      origin: a,
+      destination: b,
+
+      travelMode: google.maps.TravelMode[DRIVING]
+  };
+  directionsService.route(request, function(response, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      directionsDisplay.setDirections(response);
+    }
+  });
+}
+
+//Css
+#map {
+    width=200px ;
+    height=200px ; 
+}
